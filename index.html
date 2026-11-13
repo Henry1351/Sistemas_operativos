@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo: Sistemas Operativos y Redes - Unidad 1 (LAN)</title>
+  <!-- Tipografías altamente legibles para dislexia (Atkinson Hyperlegible y Lexend) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --bg-page: #F4F7FA;
+      --bg-card: #FFFFFF;
+      --text-main: #1E293B;
+      --text-muted: #475569;
+      --accent-blue: #1E3A8A;
+      --accent-green: #10B981;
+      --accent-purple: #6D28D9;
+      --font-scale: 1;
+    }
+
+    body.warm-theme {
+      --bg-page: #FDF8EE;
+      --bg-card: #FFFDF9;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: 'Atkinson Hyperlegible', 'Lexend', 'Verdana', 'Segoe UI', sans-serif;
+      line-height: 1.75;
+      letter-spacing: 0.03em;
+      font-size: calc(17px * var(--font-scale));
+      text-align: left;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    /* Regla estricta: Sin cursivas ni justificado para facilitar la lectura con dislexia */
+    * {
+      font-style: normal !important;
+    }
+
+    p, li {
+      text-align: left;
+      max-width: 72ch;
+    }
+
+    strong {
+      color: var(--accent-blue);
+      font-weight: 700;
+      background-color: rgba(30, 58, 138, 0.07);
+      padding: 0.05em 0.3em;
+      border-radius: 6px;
+    }
+
+    .card-surface {
+      background-color: var(--bg-card);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+      border: 2px solid rgba(30, 58, 138, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    /* Modo Lectura Enfocada para TDAH */
+    body.focus-mode-active .focus-block {
+      opacity: 0.32;
+      filter: grayscale(45%);
+      transform: scale(0.99);
+      cursor: pointer;
+    }
+
+    body.focus-mode-active .focus-block.is-focused,
+    body.focus-mode-active .focus-block:hover {
+      opacity: 1;
+      filter: none;
+      transform: scale(1);
+      border-color: var(--accent-green);
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.16);
+    }
+
+    /* Banner horizontal 3:1 responsivo */
+    .edu-banner {
+      background: linear-gradient(125deg, #1E1B4B 0%, #1E3A8A 48%, #0F766E 85%, #10B981 100%);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animación suave para ondas Wi-Fi */
+    @keyframes pulseSignal {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+    .wifi-wave {
+      animation: pulseSignal 2.4s infinite ease-in-out;
+    }
+
+    /* Botones táctiles amigables */
+    .btn-accessible {
+      min-height: 44px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-accessible:active {
+      transform: scale(0.97);
+    }
+
+    /* Estilos de cables T568B */
+    .wire-stripe-orange {
+      background: repeating-linear-gradient(45deg, #FFFFFF, #FFFFFF 6px, #F97316 6px, #F97316 12px);
+    }
+    .wire-solid-orange { background-color: #F97316; }
+    .wire-stripe-green {
+      background: repeating-linear-gradient(45deg, #FFFFFF, #FFFFFF 6px, #10B981 6px, #10B981 12px);
+    }
+    .wire-solid-blue { background-color: #2563EB; }
+    .wire-stripe-blue {
+      background: repeating-linear-gradient(45deg, #FFFFFF, #FFFFFF 6px, #2563EB 6px, #2563EB 12px);
+    }
+    .wire-solid-green { background-color: #10B981; }
+    .wire-stripe-brown {
+      background: repeating-linear-gradient(45deg, #FFFFFF, #FFFFFF 6px, #78350F 6px, #78350F 12px);
+    }
+    .wire-solid-brown { background-color: #78350F; }
+  </style>
+</head>
+<body class="pb-16">
+
+  <!-- BARRA SUPERIOR ESTILO GOOGLE SITES + HERRAMIENTAS DE ACCESIBILIDAD -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Identificador del curso (Ecuador - Bachillerato Técnico) -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+          💻
+        </div>
+        <div>
+          <span class="block text-xs font-bold uppercase tracking-wider text-emerald-700">
+            Bachillerato Técnico en Informática • 2.º Curso
+          </span>
+          <span class="font-bold text-slate-900 text-sm sm:text-base">
+            Sistemas Operativos y Redes
+          </span>
+        </div>
+      </div>
+
+      <!-- Controles Interactivos de Accesibilidad (TDAH & Dislexia) -->
+      <div class="flex flex-wrap items-center gap-2" role="toolbar" aria-label="Herramientas de accesibilidad">
+        <button id="btnFocusMode" onclick="toggleFocusMode()" class="btn-accessible px-3 py-2 text-xs sm:text-sm bg-purple-100 text-purple-900 border-2 border-purple-300 hover:bg-purple-200 flex items-center gap-1.5">
+          <span>🎯</span>
+          <span id="focusModeLabel">Lectura Enfocada: OFF</span>
+        </button>
+
+        <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-300">
+          <button onclick="changeFontSize(-0.08)" class="px-2.5 py-1.5 rounded-lg font-bold text-slate-800 hover:bg-white text-sm" title="Reducir tamaño de letra" aria-label="Reducir letra">
+            A-
+          </button>
+          <span class="px-2 text-xs font-bold text-slate-600">Texto</span>
+          <button onclick="changeFontSize(0.08)" class="px-2.5 py-1.5 rounded-lg font-bold text-slate-800 hover:bg-white text-sm" title="Aumentar tamaño de letra" aria-label="Aumentar letra">
+            A+
+          </button>
+        </div>
+
+        <button id="btnTheme" onclick="toggleWarmTheme()" class="btn-accessible px-3 py-2 text-xs sm:text-sm bg-amber-100 text-amber-950 border-2 border-amber-300 hover:bg-amber-200 flex items-center gap-1.5">
+          <span>📄</span>
+          <span id="themeLabel">Fondo Crema</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- BANNER EDUCATIVO HORIZONTAL (ASPECTO 3:1 EN ESCRITORIO, RESPONSIVO EN MÓVIL) -->
+    <section class="edu-banner text-white p-6 sm:p-8 lg:px-10 lg:py-8 shadow-xl lg:aspect-[3/1] flex flex-col justify-between">
+      <!-- Fila Superior: Insignia "¡Manos a la obra!" a la derecha -->
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="space-y-1 max-w-2xl">
+          <span class="inline-block px-3 py-1 rounded-full bg-white/15 text-sky-200 text-xs sm:text-sm font-bold tracking-wider">
+            UNIDAD EDUCATIVA TÉCNICA • ECUADOR
+          </span>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight tracking-wide text-white">
+            MÓDULO: <span class="text-sky-300">SISTEMAS OPERATIVOS Y REDES</span>
+          </h1>
+        </div>
+
+        <!-- Insignia esquina superior derecha -->
+        <div class="bg-white/15 backdrop-blur-sm border border-white/25 rounded-2xl px-4 py-2.5 flex items-center gap-3 shadow-md">
+          <div class="flex items-center gap-1.5 text-xl" aria-hidden="true">
+            <span>⚙️</span>
+            <span>🔌</span>
+            <span>📶</span>
+          </div>
+          <div class="leading-tight">
+            <span class="block text-sm sm:text-base font-bold text-emerald-300">¡Manos a la obra!</span>
+            <span class="block text-xs text-slate-200">Práctica guiada</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila Inferior: Subtítulo Unidad 1 a la izquierda + Ilustración SVG de Topología Estrella a la derecha -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mt-4">
+        <div class="lg:col-span-6">
+          <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-300 leading-snug">
+            UNIDAD 1: Sistemas Operativos y Redes Locales (LAN)
+          </h2>
+        </div>
+
+        <!-- Ilustración vectorial amigable: PC (Windows/Linux), Switch, Router y Cables UTP -->
+        <div class="lg:col-span-6 flex justify-center lg:justify-end">
+          <svg viewBox="0 0 460 145" class="w-full max-w-md h-auto drop-shadow-lg" role="img" aria-label="Diagrama de red local con computadora, switch, router inalámbrico y cables de colores azul, amarillo y verde">
+            <!-- Cables UTP (Topología Estrella desde el Switch central) -->
+            <!-- Cable Azul: PC a Switch -->
+            <path d="M 105 95 C 145 125, 185 125, 225 100" fill="none" stroke="#38BDF8" stroke-width="5" stroke-linecap="round"/>
+            <!-- Cable Amarillo: Switch a Router -->
+            <path d="M 275 100 C 315 125, 355 125, 390 95" fill="none" stroke="#FACC15" stroke-width="5" stroke-linecap="round"/>
+            <!-- Cable Verde: Conexión extra de red -->
+            <path d="M 250 108 C 250 138, 330 138, 370 105" fill="none" stroke="#4ADE80" stroke-width="4" stroke-dasharray="8 4" stroke-linecap="round"/>
+
+            <!-- Dispositivo 1: Computadora con iconos Windows y Linux -->
+            <g transform="translate(15, 18)">
+              <rect x="0" y="0" width="110" height="72" rx="12" fill="#F8FAFC" stroke="#94A3B8" stroke-width="3"/>
+              <rect x="42" y="72" width="26" height="12" fill="#CBD5E1"/>
+              <rect x="28" y="84" width="54" height="6" rx="3" fill="#94A3B8"/>
+              <!-- Icono simple Windows (4 cuadros) -->
+              <rect x="18" y="18" width="14" height="14" rx="2" fill="#EF4444"/>
+              <rect x="35" y="18" width="14" height="14" rx="2" fill="#22C55E"/>
+              <rect x="18" y="35" width="14" height="14" rx="2" fill="#3B82F6"/>
+              <rect x="35" y="35" width="14" height="14" rx="2" fill="#EAB308"/>
+              <!-- Icono simple Linux (Pingüino minimalista) -->
+              <ellipse cx="78" cy="37" rx="13" ry="17" fill="#1E293B"/>
+              <ellipse cx="78" cy="40" rx="8" ry="11" fill="#FFFFFF"/>
+              <circle cx="75" cy="27" r="2" fill="#FFFFFF"/>
+              <circle cx="81" cy="27" r="2" fill="#FFFFFF"/>
+              <polygon points="75,31 81,31 78,35" fill="#F59E0B"/>
+            </g>
+
+            <!-- Dispositivo 2: Switch Central -->
+            <g transform="translate(195, 58)">
+              <rect x="0" y="0" width="110" height="44" rx="10" fill="#4C1D95" stroke="#A78BFA" stroke-width="2.5"/>
+              <text x="55" y="16" text-anchor="middle" fill="#E9D5FF" font-size="10" font-weight="bold">SWITCH</text>
+              <!-- Puertos RJ45 -->
+              <rect x="14" y="23" width="14" height="12" rx="2" fill="#38BDF8"/>
+              <rect x="34" y="23" width="14" height="12" rx="2" fill="#FACC15"/>
+              <rect x="54" y="23" width="14" height="12" rx="2" fill="#4ADE80"/>
+              <rect x="74" y="23" width="14" height="12" rx="2" fill="#1E1B4B"/>
+            </g>
+
+            <!-- Dispositivo 3: Router Wi-Fi -->
+            <g transform="translate(350, 35)">
+              <!-- Antenas -->
+              <line x1="25" y1="25" x2="18" y2="2" stroke="#CBD5E1" stroke-width="4" stroke-linecap="round"/>
+              <line x1="70" y1="25" x2="77" y2="2" stroke="#CBD5E1" stroke-width="4" stroke-linecap="round"/>
+              <!-- Ondas Wi-Fi -->
+              <path d="M 38 12 Q 48 3 58 12" fill="none" stroke="#6EE7B7" stroke-width="3" stroke-linecap="round" class="wifi-wave"/>
+              <path d="M 32 6 Q 48 -7 64 6" fill="none" stroke="#6EE7B7" stroke-width="3" stroke-linecap="round" class="wifi-wave"/>
+              <!-- Cuerpo Router -->
+              <rect x="5" y="24" width="85" height="42" rx="10" fill="#312E81" stroke="#818CF8" stroke-width="2.5"/>
+              <circle cx="22" cy="48" r="3.5" fill="#34D399"/>
+              <circle cx="34" cy="48" r="3.5" fill="#34D399"/>
+              <circle cx="46" cy="48" r="3.5" fill="#38BDF8"/>
+              <text x="68" y="51" text-anchor="middle" fill="#C7D2FE" font-size="9" font-weight="bold">WI-FI</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVISO AMIGABLE DE LECTURA ENFOCADA (TDAH) -->
+    <div id="focusHelperBanner" class="hidden bg-purple-100 border-2 border-purple-400 rounded-2xl p-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">💡</span>
+        <p class="text-purple-950 font-bold text-sm sm:text-base">
+          Modo Lectura Enfocada activado: Haz clic sobre cualquier tarjeta para iluminarla y leer sin distracciones.
+        </p>
+      </div>
+      <button onclick="toggleFocusMode()" class="px-3 py-1.5 bg-purple-700 text-white rounded-xl text-xs font-bold">
+        Desactivar
+      </button>
+    </div>
+
+    <!-- INTRODUCCIÓN Y OBJETIVO DE LA UNIDAD -->
+    <section onclick="setFocusedBlock(this)" class="focus-block is-focused card-surface p-6 sm:p-8 border-l-8 border-l-emerald-500">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-2xl">🚀</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-blue-950">
+          ¿Qué vamos a aprender en esta unidad?
+        </h2>
+      </div>
+
+      <p class="mb-4 text-slate-800">
+        Hoy descubrirás cómo se comunican las computadoras dentro de tu laboratorio de informática. Aprenderás a preparar tanto el programa principal del equipo como los cables físicos que unen toda la red.
+      </p>
+
+      <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 sm:p-5">
+        <p class="font-bold text-emerald-950 mb-2">🎯 Tus metas de hoy son muy claras:</p>
+        <ul class="space-y-2.5 text-slate-800">
+          <li class="flex items-start gap-3">
+            <span class="text-xl leading-none mt-0.5">🖥️</span>
+            <span>Comprender cómo <strong>Windows</strong> y <strong>Linux</strong> conectan el equipo a la red.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-xl leading-none mt-0.5">🌐</span>
+            <span>Identificar las partes de una <strong>Red Local (LAN)</strong> y su forma de estrella.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-xl leading-none mt-0.5">🛠️</span>
+            <span>Configurar una dirección <strong>IPv4</strong> y armar un cable de red <strong>T568B</strong> paso a paso.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- BLOQUE 1: EL SISTEMA OPERATIVO EN RED (WINDOWS Y LINUX) -->
+    <section onclick="setFocusedBlock(this)" class="focus-block card-surface p-6 sm:p-8">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-900 flex items-center justify-center text-2xl">🧠</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-blue-950">
+          Bloque 1: El Sistema Operativo en Red (Windows y Linux)
+        </h2>
+      </div>
+
+      <p class="mb-4 text-slate-800">
+        El <strong>Sistema Operativo</strong> es el cerebro principal que controla toda la computadora. Para conectarse a internet o al laboratorio, este sistema gestiona una pieza interna llamada <strong>tarjeta de red</strong>.
+      </p>
+
+      <p class="mb-6 text-slate-800">
+        Piensa en la tarjeta de red como la boca y los oídos del computador. Gracias al sistema operativo, el equipo traduce tus archivos en señales eléctricas para enviarlos a otros compañeros.
+      </p>
+
+      <!-- Comparativa visual en 2 tarjetas cortas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Tarjeta Windows -->
+        <div class="rounded-2xl bg-sky-50 border-2 border-sky-200 p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🪟</span>
+            <h3 class="text-lg font-bold text-blue-950">Microsoft Windows</h3>
+          </div>
+          <ul class="space-y-2.5 text-slate-800">
+            <li class="flex items-start gap-2.5">
+              <span>✅</span>
+              <span>Usa ventanas gráficas muy fáciles de usar con el ratón.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span>✅</span>
+              <span>Es el sistema más común en oficinas y hogares de Ecuador.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span>✅</span>
+              <span>Configura la red desde el <strong>Panel de Control</strong>.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Tarjeta Linux -->
+        <div class="rounded-2xl bg-purple-50 border-2 border-purple-200 p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🐧</span>
+            <h3 class="text-lg font-bold text-purple-950">GNU/Linux (Ubuntu)</h3>
+          </div>
+          <ul class="space-y-2.5 text-slate-800">
+            <li class="flex items-start gap-2.5">
+              <span>✅</span>
+              <span>Es <strong>software libre</strong>: gratuito, seguro y muy veloz.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span>✅</span>
+              <span>Es el favorito para servidores que nunca se apagan.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span>✅</span>
+              <span>Permite controlar la red con comandos rápidos en pantalla.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOQUE 2: ¿QUÉ ES UNA RED LOCAL (LAN) Y TOPOLOGÍA EN ESTRELLA? -->
+    <section onclick="setFocusedBlock(this)" class="focus-block card-surface p-6 sm:p-8">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-900 flex items-center justify-center text-2xl">🕸️</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-blue-950">
+          Bloque 2: ¿Qué es una Red Local (LAN) y cómo se conecta?
+        </h2>
+      </div>
+
+      <p class="mb-4 text-slate-800">
+        Una <strong>Red LAN</strong> (Red de Área Local) es un grupo de computadoras conectadas dentro de un mismo edificio, como tu colegio o tu casa. Sirve para compartir impresoras, archivos e internet sin usar memorias USB.
+      </p>
+
+      <p class="mb-6 text-slate-800">
+        En los laboratorios actuales usamos la <strong>Topología en Estrella</strong>. Imagina una rueda de bicicleta: todos los cables salen desde cada computadora hacia un aparato central que reparte los datos.
+      </p>
+
+      <!-- DIAGRAMA INTERACTIVO DE TOPOLOGÍA EN ESTRELLA -->
+      <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <span class="font-bold text-blue-950 text-base sm:text-lg">
+            👆 Haz clic en cada dispositivo para ver su función:
+          </span>
+          <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-900">
+            Diagrama Interactivo
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <!-- SVG Interactivo -->
+          <div class="lg:col-span-7 flex justify-center">
+            <svg viewBox="0 0 420 260" class="w-full max-w-md h-auto select-none">
+              <!-- Líneas de conexión estrella -->
+              <line x1="210" y1="145" x2="80" y2="60" stroke="#3B82F6" stroke-width="5" stroke-linecap="round"/>
+              <line x1="210" y1="145" x2="340" y2="60" stroke="#10B981" stroke-width="5" stroke-linecap="round"/>
+              <line x1="210" y1="145" x2="210" y2="225" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/>
+
+              <!-- Nodo 1: PC Estudiante (Arriba Izquierda) -->
+              <g onclick="selectDevice('pc')" class="cursor-pointer hover:opacity-85 transition-opacity" role="button" tabindex="0" aria-label="Computadora PC">
+                <rect x="25" y="15" width="110" height="72" rx="14" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="3"/>
+                <text x="80" y="48" text-anchor="middle" font-size="24">🖥️</text>
+                <text x="80" y="73" text-anchor="middle" fill="#1E3A8A" font-size="13" font-weight="bold">Computadora</text>
+              </g>
+
+              <!-- Nodo 2: Router Wi-Fi (Arriba Derecha) -->
+              <g onclick="selectDevice('router')" class="cursor-pointer hover:opacity-85 transition-opacity" role="button" tabindex="0" aria-label="Router Wi-Fi">
+                <rect x="285" y="15" width="110" height="72" rx="14" fill="#D1FAE5" stroke="#065F46" stroke-width="3"/>
+                <text x="340" y="48" text-anchor="middle" font-size="24">📶</text>
+                <text x="340" y="73" text-anchor="middle" fill="#065F46" font-size="13" font-weight="bold">Router</text>
+              </g>
+
+              <!-- Nodo Central: Switch (Centro) -->
+              <g onclick="selectDevice('switch')" class="cursor-pointer hover:opacity-85 transition-opacity" role="button" tabindex="0" aria-label="Switch Central">
+                <rect x="145" y="105" width="130" height="72" rx="16" fill="#EDE9FE" stroke="#6D28D9" stroke-width="3.5"/>
+                <text x="210" y="138" text-anchor="middle" font-size="24">🔀</text>
+                <text x="210" y="163" text-anchor="middle" fill="#4C1D95" font-size="13" font-weight="bold">Switch (Centro)</text>
+              </g>
+
+              <!-- Nodo 3: Cable UTP (Abajo Centro) -->
+              <g onclick="selectDevice('utp')" class="cursor-pointer hover:opacity-85 transition-opacity" role="button" tabindex="0" aria-label="Cable UTP y Conector RJ45">
+                <rect x="145" y="195" width="130" height="55" rx="14" fill="#FEF3C7" stroke="#B45309" stroke-width="3"/>
+                <text x="210" y="220" text-anchor="middle" font-size="18">🔌</text>
+                <text x="210" y="240" text-anchor="middle" fill="#78350F" font-size="12" font-weight="bold">Cable UTP + RJ45</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Tarjeta de Explicación Corta (Máximo 3 líneas) -->
+          <div class="lg:col-span-5">
+            <div id="deviceInfoCard" class="bg-white border-2 border-purple-300 rounded-2xl p-5 shadow-sm">
+              <div class="flex items-center gap-2.5 mb-2">
+                <span id="deviceIcon" class="text-3xl">🔀</span>
+                <h3 id="deviceTitle" class="text-lg font-bold text-purple-950">Switch (Conmutador)</h3>
+              </div>
+              <p id="deviceDesc" class="text-slate-800 leading-relaxed">
+                Es el corazón de la estrella. Funciona como un <strong>policía de tránsito</strong> que recibe mensajes de una PC y los entrega únicamente a la computadora correcta.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOQUE 3: ¡MANOS A LA OBRA! PASO A PASO VISUAL -->
+    <section onclick="setFocusedBlock(this)" class="focus-block card-surface p-6 sm:p-8 border-t-8 border-t-blue-900">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3">
+          <span class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-2xl">🛠️</span>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Práctica Guiada</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-blue-950">
+              ¡Manos a la obra! Paso a paso visual
+            </h2>
+          </div>
+        </div>
+
+        <!-- Selector de Pestañas / Acordeón -->
+        <div class="flex flex-wrap gap-2" role="tablist">
+          <button id="tabBtnIpv4" onclick="switchPracticeTab('ipv4')" class="btn-accessible px-4 py-2.5 bg-blue-900 text-white shadow-sm flex items-center gap-2" role="tab" aria-selected="true">
+            <span>1️⃣</span>
+            <span>Configurar IPv4 en Windows</span>
+          </button>
+          <button id="tabBtnUtp" onclick="switchPracticeTab('utp')" class="btn-accessible px-4 py-2.5 bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200 flex items-center gap-2" role="tab" aria-selected="false">
+            <span>2️⃣</span>
+            <span>Ponchar Cable UTP T568B</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 1: CONFIGURAR DIRECCIÓN IPV4 ESTÁTICA EN WINDOWS -->
+      <div id="panelIpv4" class="space-y-6">
+        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+          <p class="text-slate-800">
+            <strong>¿Qué es una dirección IPv4?</strong> Es como el <strong>número de cédula</strong> o la dirección de casa de tu computadora dentro de la red. Sin ella, ningún equipo sabría a quién enviar los datos.
+          </p>
+        </div>
+
+        <!-- 5 Pasos Numerados y Cortos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex gap-3.5">
+            <span class="w-9 h-9 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center shrink-0">1</span>
+            <p class="text-slate-800">Haz clic derecho en el ícono de <strong>Red</strong> (abajo a la derecha junto al reloj) y elige <strong>Abrir configuración de red e Internet</strong>.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex gap-3.5">
+            <span class="w-9 h-9 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center shrink-0">2</span>
+            <p class="text-slate-800">Selecciona la opción <strong>Cambiar opciones del adaptador</strong> para ver tu tarjeta de red Ethernet.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex gap-3.5">
+            <span class="w-9 h-9 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center shrink-0">3</span>
+            <p class="text-slate-800">Haz clic derecho sobre <strong>Ethernet</strong> y presiona en <strong>Propiedades</strong>.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex gap-3.5">
+            <span class="w-9 h-9 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center shrink-0">4</span>
+            <p class="text-slate-800">Busca y haz doble clic en <strong>Protocolo de Internet versión 4 (TCP/IPv4)</strong>.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 flex gap-3.5 md:col-span-2">
+            <span class="w-9 h-9 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center shrink-0">5</span>
+            <p class="text-slate-800">Marca <strong>Usar la siguiente dirección IP</strong>, escribe los números de red y presiona <strong>Aceptar</strong>.</p>
+          </div>
+        </div>
+
+        <!-- SIMULADOR INTERACTIVO DE VENTANA TCP/IPv4 DE WINDOWS -->
+        <div class="bg-slate-100 border-2 border-slate-300 rounded-2xl p-5 sm:p-6">
+          <h3 class="font-bold text-blue-950 text-lg mb-2 flex items-center gap-2">
+            <span>💻</span>
+            <span>Simulador Práctico: Configura tu PC en el laboratorio</span>
+          </h3>
+          <p class="text-slate-700 mb-4">
+            Escribe una dirección IP válida para el laboratorio (ejemplo: <strong>192.168.1.10</strong>) y verifica si funciona:
+          </p>
+
+          <!-- Maqueta estilo ventana de Windows -->
+          <div class="max-w-lg mx-auto bg-white rounded-xl border-2 border-slate-400 shadow-md overflow-hidden">
+            <div class="bg-blue-900 text-white px-4 py-2.5 text-sm font-bold flex items-center justify-between">
+              <span>Propiedades de: Protocolo de Internet versión 4 (TCP/IPv4)</span>
+              <span>✕</span>
+            </div>
+
+            <div class="p-5 space-y-4">
+              <div class="flex items-center gap-2 text-sm font-bold text-blue-950">
+                <input type="radio" checked readonly class="w-4 h-4 accent-blue-900">
+                <span>Usar la siguiente dirección IP:</span>
+              </div>
+
+              <div class="space-y-3 pl-2">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <label for="inputIp" class="text-sm font-bold text-slate-800">Dirección IP:</label>
+                  <input id="inputIp" type="text" placeholder="Ej: 192.168.1.10" class="px-3 py-2 border-2 border-slate-300 rounded-lg font-mono text-base w-full sm:w-52 focus:border-blue-700 focus:outline-none">
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <label for="inputMask" class="text-sm font-bold text-slate-800">Máscara de subred:</label>
+                  <input id="inputMask" type="text" value="255.255.255.0" class="px-3 py-2 border-2 border-slate-300 rounded-lg font-mono text-base w-full sm:w-52 bg-slate-50 focus:border-blue-700 focus:outline-none">
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <label for="inputGateway" class="text-sm font-bold text-slate-800">Puerta de enlace:</label>
+                  <input id="inputGateway" type="text" value="192.168.1.1" class="px-3 py-2 border-2 border-slate-300 rounded-lg font-mono text-base w-full sm:w-52 bg-slate-50 focus:border-blue-700 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="pt-2 flex flex-wrap items-center justify-end gap-3 border-t border-slate-200">
+                <button onclick="fillExampleIp()" class="btn-accessible px-3 py-2 text-xs bg-slate-200 text-slate-800 hover:bg-slate-300">
+                  Rellenar ejemplo
+                </button>
+                <button onclick="validateIpv4()" class="btn-accessible px-5 py-2 text-sm bg-emerald-600 text-white hover:bg-emerald-700">
+                  Aceptar y Comprobar
+                </button>
+              </div>
+
+              <!-- Retroalimentación inmediata -->
+              <div id="ipFeedback" class="hidden rounded-xl p-3.5 text-sm font-bold"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 2: PONCHAR CABLE UTP CON NORMA T568B -->
+      <div id="panelUtp" class="hidden space-y-6">
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+          <p class="text-slate-800">
+            <strong>¿Qué es un cable UTP y un conector RJ45?</strong> El <strong>cable UTP</strong> es una manguera con 8 hilitos de cobre trenzados por dentro. El <strong>conector RJ45</strong> es la ficha transparente de plástico que va en la punta, y la norma <strong>T568B</strong> es la receta exacta de colores.
+          </p>
+        </div>
+
+        <!-- 6 Pasos Numerados y Visuales -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span class="inline-flex w-8 h-8 rounded-full bg-purple-700 text-white font-bold items-center justify-center mb-2">1</span>
+            <p class="text-slate-800"><strong>Pelar:</strong> Retira 2 cm de la cubierta gris del cable UTP sin lastimar los hilos internos.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span class="inline-flex w-8 h-8 rounded-full bg-purple-700 text-white font-bold items-center justify-center mb-2">2</span>
+            <p class="text-slate-800"><strong>Destrenzar:</strong> Separa los 4 pares de cables y alísalos con tus dedos para que queden rectos.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span class="inline-flex w-8 h-8 rounded-full bg-purple-700 text-white font-bold items-center justify-center mb-2">3</span>
+            <p class="text-slate-800"><strong>Ordenar (T568B):</strong> Coloca los 8 colores de izquierda a derecha siguiendo la tabla de abajo.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span class="inline-flex w-8 h-8 rounded-full bg-purple-700 text-white font-bold items-center justify-center mb-2">4</span>
+            <p class="text-slate-800"><strong>Cortar parejo:</strong> Con la cuchilla de la ponchadora, corta las puntas a 1.2 cm para que queden iguales.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span class="inline-flex w-8 h-8 rounded-full bg-purple-700 text-white font-bold items-center justify-center mb-2">5</span>
+            <p class="text-slate-800"><strong>Insertar en RJ45:</strong> Mete los cables con la pestaña del conector mirando hacia abajo hasta el fondo.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300">
+            <span class="inline-flex w-8 h-8 rounded-full bg-emerald-600 text-white font-bold items-center justify-center mb-2">6</span>
+            <p class="text-slate-800"><strong>Ponchar:</strong> Introduce el conector en la herramienta <strong>ponchadora</strong> y aprieta firme hasta escuchar un clic.</p>
+          </div>
+        </div>
+
+        <!-- DIAGRAMA GRÁFICO INTERACTIVO DE LOS 8 HILOS T568B -->
+        <div class="bg-slate-100 border-2 border-slate-300 rounded-2xl p-5 sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h3 class="font-bold text-blue-950 text-lg">
+              🎨 Orden Oficial Norma T568B (De Pin 1 a Pin 8)
+            </h3>
+            <button onclick="startWireQuiz()" class="btn-accessible px-4 py-2 text-xs sm:text-sm bg-purple-700 text-white hover:bg-purple-800">
+              🎮 Probar mi memoria de colores
+            </button>
+          </div>
+
+          <p id="wireInstruction" class="text-slate-700 mb-4">
+            Haz clic en cada cable de color para ver su número de pin y su función:
+          </p>
+
+          <!-- Representación visual del conector RJ45 con los 8 hilos -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            <!-- Pin 1 -->
+            <button onclick="handleWireClick(1, 'Blanco-Naranja', 'Transmite datos (+)')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 1</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-stripe-orange"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Blanco Naranja</span>
+            </button>
+
+            <!-- Pin 2 -->
+            <button onclick="handleWireClick(2, 'Naranja', 'Transmite datos (-)')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 2</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-solid-orange"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Naranja</span>
+            </button>
+
+            <!-- Pin 3 -->
+            <button onclick="handleWireClick(3, 'Blanco-Verde', 'Recibe datos (+)')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 3</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-stripe-green"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Blanco Verde</span>
+            </button>
+
+            <!-- Pin 4 -->
+            <button onclick="handleWireClick(4, 'Azul', 'Reserva / Telefonía')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 4</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-solid-blue"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Azul</span>
+            </button>
+
+            <!-- Pin 5 -->
+            <button onclick="handleWireClick(5, 'Blanco-Azul', 'Reserva / Telefonía')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 5</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-stripe-blue"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Blanco Azul</span>
+            </button>
+
+            <!-- Pin 6 -->
+            <button onclick="handleWireClick(6, 'Verde', 'Recibe datos (-)')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 6</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-solid-green"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Verde</span>
+            </button>
+
+            <!-- Pin 7 -->
+            <button onclick="handleWireClick(7, 'Blanco-Marrón', 'Reserva / Energía PoE')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 7</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-stripe-brown"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Blanco Marrón</span>
+            </button>
+
+            <!-- Pin 8 -->
+            <button onclick="handleWireClick(8, 'Marrón', 'Reserva / Energía PoE')" class="wire-card bg-white p-3 rounded-xl border-2 border-slate-300 hover:border-blue-700 flex flex-col items-center gap-2 transition-all">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">Pin 8</span>
+              <div class="w-6 h-16 rounded-full border border-slate-400 wire-solid-brown"></div>
+              <span class="text-xs font-bold text-center text-slate-900 leading-tight">Marrón</span>
+            </button>
+          </div>
+
+          <!-- Caja de detalle o estado del minijuego de cables -->
+          <div id="wireFeedback" class="mt-4 bg-white border-2 border-blue-200 rounded-xl p-4 text-slate-800 font-bold">
+            💡 Truco visual: Fíjate que los colores <strong>Verde</strong> y <strong>Azul</strong> se abrazan en el centro (Pins 3, 4, 5 y 6).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN FINAL: PUNTOS CLAVE A RECORDAR -->
+    <section onclick="setFocusedBlock(this)" class="focus-block card-surface p-6 sm:p-8 bg-gradient-to-br from-blue-950 to-slate-900 text-white border-none">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-11 h-11 rounded-2xl bg-emerald-400/20 text-emerald-300 flex items-center justify-center text-2xl">⭐</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-white">
+          Puntos Clave a Recordar
+        </h2>
+      </div>
+
+      <ul class="space-y-3.5 text-slate-100">
+        <li class="flex items-start gap-3">
+          <span class="text-xl">🧠</span>
+          <span>El <strong class="text-emerald-300 bg-white/10">Sistema Operativo</strong> (Windows o Linux) controla la tarjeta de red para enviar y recibir información.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-xl">⭐</span>
+          <span>Una <strong class="text-sky-300 bg-white/10">Red LAN en Estrella</strong> conecta todas las computadoras hacia un <strong class="text-sky-300 bg-white/10">Switch</strong> central.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-xl">🪪</span>
+          <span>La <strong class="text-emerald-300 bg-white/10">Dirección IPv4</strong> es el número único que identifica a cada equipo en la red local.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-xl">🔌</span>
+          <span>La norma <strong class="text-amber-300 bg-white/10">T568B</strong> ordena los 8 hilos del cable UTP dentro del conector <strong class="text-amber-300 bg-white/10">RJ45</strong>.</span>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script>
+    // 1. HERRAMIENTAS DE ACCESIBILIDAD (TDAH & DISLEXIA)
+    let isFocusMode = false;
+    let fontScale = 1;
+    let isWarmTheme = false;
+
+    function toggleFocusMode() {
+      isFocusMode = !isFocusMode;
+      document.body.classList.toggle('focus-mode-active', isFocusMode);
+      const label = document.getElementById('focusModeLabel');
+      const banner = document.getElementById('focusHelperBanner');
+      if (isFocusMode) {
+        label.textContent = 'Lectura Enfocada: ON';
+        banner.classList.remove('hidden');
+      } else {
+        label.textContent = 'Lectura Enfocada: OFF';
+        banner.classList.add('hidden');
+      }
+    }
+
+    function setFocusedBlock(element) {
+      if (!isFocusMode) return;
+      document.querySelectorAll('.focus-block').forEach(block => {
+        block.classList.remove('is-focused');
+      });
+      element.classList.add('is-focused');
+    }
+
+    function changeFontSize(delta) {
+      fontScale = Math.min(1.3, Math.max(0.88, +(fontScale + delta).toFixed(2)));
+      document.documentElement.style.setProperty('--font-scale', fontScale);
+    }
+
+    function toggleWarmTheme() {
+      isWarmTheme = !isWarmTheme;
+      document.body.classList.toggle('warm-theme', isWarmTheme);
+      document.getElementById('themeLabel').textContent = isWarmTheme ? 'Fondo Claro' : 'Fondo Crema';
+    }
+
+    // 2. DIAGRAMA INTERACTIVO DE TOPOLOGÍA EN ESTRELLA
+    const deviceDetails = {
+      pc: {
+        icon: '🖥️',
+        title: 'Computadora (Host)',
+        desc: 'Es el equipo donde trabajas. Usa su <strong>tarjeta de red</strong> y su sistema operativo (Windows o Linux) para pedir y enviar archivos.'
+      },
+      switch: {
+        icon: '🔀',
+        title: 'Switch (Conmutador)',
+        desc: 'Es el corazón de la estrella. Funciona como un <strong>policía de tránsito</strong> que recibe mensajes de una PC y los entrega únicamente a la computadora correcta.'
+      },
+      router: {
+        icon: '📶',
+        title: 'Router (Enrutador)',
+        desc: 'Es la <strong>puerta de salida</strong> hacia Internet. Además, reparte señal inalámbrica <strong>Wi-Fi</strong> para laptops y celulares del aula.'
+      },
+      utp: {
+        icon: '🔌',
+        title: 'Cable UTP y Conector RJ45',
+        desc: 'Es la <strong>autopista física</strong> por donde viajan los datos. Tiene 8 hilos de cobre ordenados bajo la norma <strong>T568B</strong>.'
+      }
+    };
+
+    function selectDevice(key) {
+      const info = deviceDetails[key];
+      if (!info) return;
+      document.getElementById('deviceIcon').textContent = info.icon;
+      document.getElementById('deviceTitle').textContent = info.title;
+      document.getElementById('deviceDesc').innerHTML = info.desc;
+    }
+
+    // 3. PESTAÑAS DE PRÁCTICA GUIADA
+    function switchPracticeTab(tab) {
+      const panelIpv4 = document.getElementById('panelIpv4');
+      const panelUtp = document.getElementById('panelUtp');
+      const btnIpv4 = document.getElementById('tabBtnIpv4');
+      const btnUtp = document.getElementById('tabBtnUtp');
+
+      if (tab === 'ipv4') {
+        panelIpv4.classList.remove('hidden');
+        panelUtp.classList.add('hidden');
+        btnIpv4.className = 'btn-accessible px-4 py-2.5 bg-blue-900 text-white shadow-sm flex items-center gap-2';
+        btnUtp.className = 'btn-accessible px-4 py-2.5 bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200 flex items-center gap-2';
+      } else {
+        panelUtp.classList.remove('hidden');
+        panelIpv4.classList.add('hidden');
+        btnUtp.className = 'btn-accessible px-4 py-2.5 bg-blue-900 text-white shadow-sm flex items-center gap-2';
+        btnIpv4.className = 'btn-accessible px-4 py-2.5 bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200 flex items-center gap-2';
+      }
+    }
+
+    // 4. SIMULADOR DE CONFIGURACIÓN IPV4 EN WINDOWS
+    function fillExampleIp() {
+      document.getElementById('inputIp').value = '192.168.1.15';
+      document.getElementById('inputMask').value = '255.255.255.0';
+      document.getElementById('inputGateway').value = '192.168.1.1';
+      validateIpv4();
+    }
+
+    function validateIpv4() {
+      const ip = document.getElementById('inputIp').value.trim();
+      const mask = document.getElementById('inputMask').value.trim();
+      const feedback = document.getElementById('ipFeedback');
+
+      // Expresión regular básica para validar formato IPv4 (4 bloques de 0 a 255)
+      const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/;
+
+      feedback.classList.remove('hidden');
+
+      if (!ipv4Regex.test(ip)) {
+        feedback.className = 'rounded-xl p-3.5 text-sm font-bold bg-red-100 text-red-900 border border-red-300';
+        feedback.innerHTML = '⚠️ Revisa el formato: Una IPv4 tiene 4 números separados por puntos (ejemplo: 192.168.1.10).';
+        return;
+      }
+
+      if (ip === '192.168.1.1') {
+        feedback.className = 'rounded-xl p-3.5 text-sm font-bold bg-amber-100 text-amber-950 border border-amber-300';
+        feedback.innerHTML = '⚠️ ¡Cuidado! La dirección 192.168.1.1 ya la usa el Router (Puerta de enlace). Elige otro número final, como .10 o .20.';
+        return;
+      }
+
+      if (!ipv4Regex.test(mask)) {
+        feedback.className = 'rounded-xl p-3.5 text-sm font-bold bg-red-100 text-red-900 border border-red-300';
+        feedback.innerHTML = '⚠️ La Máscara de subred debe ser 255.255.255.0.';
+        return;
+      }
+
+      feedback.className = 'rounded-xl p-3.5 text-sm font-bold bg-emerald-100 text-emerald-950 border border-emerald-400';
+      feedback.innerHTML = `🎉 ¡Excelente trabajo! Tu computadora ya tiene la dirección <strong>${ip}</strong> y puede comunicarse en la Red LAN.`;
+    }
+
+    // 5. INTERACTIVIDAD Y MINIJUEGO DE ORDEN T568B
+    let quizActive = false;
+    let expectedPin = 1;
+
+    function startWireQuiz() {
+      quizActive = true;
+      expectedPin = 1;
+      document.getElementById('wireInstruction').innerHTML =
+        '🎯 <strong>Reto activo:</strong> Haz clic en los colores en orden correcto empezando por el <strong>Pin 1</strong>.';
+      document.getElementById('wireFeedback').className =
+        'mt-4 bg-purple-100 border-2 border-purple-400 rounded-xl p-4 text-purple-950 font-bold';
+      document.getElementById('wireFeedback').textContent = '👉 Paso 1: Selecciona el cable que va en el Pin 1.';
+    }
+
+    function handleWireClick(pin, colorName, role) {
+      const feedback = document.getElementById('wireFeedback');
+
+      if (!quizActive) {
+        feedback.className = 'mt-4 bg-white border-2 border-blue-200 rounded-xl p-4 text-slate-800 font-bold';
+        feedback.innerHTML = `📌 <strong>Pin ${pin} (${colorName}):</strong> ${role}.`;
+        return;
+      }
+
+      if (pin === expectedPin) {
+        if (expectedPin === 8) {
+          quizActive = false;
+          feedback.className = 'mt-4 bg-emerald-100 border-2 border-emerald-500 rounded-xl p-4 text-emerald-950 font-bold';
+          feedback.innerHTML = '🏆 ¡Felicitaciones! Ordenaste los 8 hilos de la norma <strong>T568B</strong> sin errores. ¡Listo para ponchar!';
+          document.getElementById('wireInstruction').textContent = 'Haz clic en cada cable de color para ver su número de pin y su función:';
+        } else {
+          expectedPin++;
+          feedback.className = 'mt-4 bg-emerald-50 border-2 border-emerald-300 rounded-xl p-4 text-emerald-950 font-bold';
+          feedback.innerHTML = `✅ ¡Correcto! Pin ${pin} es ${colorName}. Ahora busca el <strong>Pin ${expectedPin}</strong>.`;
+        }
+      } else {
+        feedback.className = 'mt-4 bg-amber-100 border-2 border-amber-400 rounded-xl p-4 text-amber-950 font-bold';
+        feedback.innerHTML = `🔄 Ese es el Pin ${pin} (${colorName}). Estamos buscando el <strong>Pin ${expectedPin}</strong>. ¡Inténtalo de nuevo!`;
+      }
+    }
+  </script>
+</body>
+</html>
